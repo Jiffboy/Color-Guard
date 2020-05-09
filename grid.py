@@ -2,6 +2,7 @@ import tileFactory
 import math
 import random
 import copy
+import pygame
 
 
 class Grid:
@@ -28,6 +29,8 @@ class Grid:
         self.constructRoad(20)
 
     def draw(self, screen):
+        pygame.draw.rect(screen, (150, 150, 150), (self.x - 3, self.y - 3, self.tileSize * self.cols + 6, self.tileSize * self.rows + 6))
+        pygame.draw.rect(screen, (255, 255, 255), (self.x, self.y, self.tileSize * self.cols, self.tileSize * self.rows))
         for i in range(0, self.cols):
             for j in range(0, self.rows):
                 self.grid[i][j].draw(screen)
@@ -63,6 +66,14 @@ class Grid:
         except:
             return False
 
+    def showLines(self, show):
+        for i in range(0, self.cols):
+            for j in range(0, self.rows):
+                if self.grid[i][j].name == "empty":
+                    if show:
+                        self.grid[i][j].isGreyed = False
+                    else:
+                        self.grid[i][j].isGreyed = True
 
     def constructRoad(self, length):
         grid = []

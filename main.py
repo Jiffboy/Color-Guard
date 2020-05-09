@@ -23,10 +23,12 @@ itemMenu = menu.Menu((15, 350), (100, 100))
 
 while True:
     clock.tick(60)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
             if not holdingTile:
@@ -34,6 +36,7 @@ while True:
                     heldTile = itemMenu.getItem(pos)
                     pygame.mouse.set_visible(0)
                     holdingTile = True
+                    tileGrid.showLines(True)
             else:
                 if tileGrid.isInGrid(pos):
                     if tileGrid.isPlaceableAtPos(pos):
@@ -47,7 +50,7 @@ while True:
                     heldTile = heldTile = tile.Tile(0, 0, 0)
                 pygame.mouse.set_visible(1)
                 holdingTile = False
-
+                tileGrid.showLines(False)
 
     background.fill((250, 250, 250))
     screen.blit(background, (0, 0))
@@ -60,6 +63,7 @@ while True:
         x = pos[0] - math.floor(heldTile.size / 2)
         y = pos[1] - math.floor(heldTile.size / 2)
         heldTile.updatePos((x, y))
+
     tileGrid.draw(screen)
     itemMenu.draw(screen)
     heldTile.draw(screen)

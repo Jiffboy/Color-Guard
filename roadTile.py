@@ -5,6 +5,7 @@ import pygame
 class RoadTile(tile.Tile):
     name = "road"
     isTerrain = True
+
     def __init__(self, x, y, size):
         tile.Tile.__init__(self, x, y, size)
 
