@@ -36,7 +36,10 @@ while True:
                     holdingTile = True
             else:
                 if tileGrid.isInGrid(pos):
-                    tileGrid.setTileAtPos(pos, heldTile)
+                    if tileGrid.isPlaceableAtPos(pos):
+                        tileGrid.setTileAtPos(pos, heldTile)
+                    else:
+                        break
                 elif itemMenu.isInMenu(pos):
                     heldTile = itemMenu.getItem(pos)
                     break
@@ -50,6 +53,10 @@ while True:
     screen.blit(background, (0, 0))
     if holdingTile:
         pos = pygame.mouse.get_pos()
+        if tileGrid.isPlaceableAtPos(pos):
+            heldTile.isGreyed = False
+        else:
+            heldTile.isGreyed = True
         x = pos[0] - math.floor(heldTile.size / 2)
         y = pos[1] - math.floor(heldTile.size / 2)
         heldTile.updatePos((x, y))

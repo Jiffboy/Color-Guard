@@ -11,6 +11,7 @@ class Grid:
     cols = 0
     tileSize = 0
     grid = []
+    start = (0, 0)
 
     def __init__(self, startPos, startDims, tileSize):
         self.x = startPos[0]
@@ -46,9 +47,22 @@ class Grid:
     def setTileAtPos(self, pos, tile):
         xDist = pos[0] - self.x
         yDist = pos[1] - self.y
-        row = math.floor(xDist / self.tileSize)
-        col = math.floor(yDist / self.tileSize)
-        self.setTile(row, col, tile)
+        col = math.floor(xDist / self.tileSize)
+        row = math.floor(yDist / self.tileSize)
+        self.setTile(col, row, tile)
+
+    def isPlaceableAtPos(self, pos):
+        try:
+            xDist = pos[0] - self.x
+            yDist = pos[1] - self.y
+            col = math.floor(xDist / self.tileSize)
+            row = math.floor(yDist / self.tileSize)
+            if (not self.grid[col][row].isTerrain) and (not self.grid[col][row].isTower):
+                return True
+            return False
+        except:
+            return False
+
 
     def constructRoad(self, length):
         grid = []
@@ -62,21 +76,20 @@ class Grid:
             top = random.randrange(self.cols - 1)
             bot = random.randrange(self.cols - 1)
 
-            #if the number of tiles that needs to be traveled isn't the same odd/even as the distance,
-            #a path will not be able to be generated, cause math
-            if((top + bot + self.rows-1) % 2 == even):
+            # if the number of tiles that needs to be traveled isn't the same odd/even as the distance,
+            # a path will not be able to be generated, cause math
+            if (top + bot + self.rows-1) % 2 == even:
                 break
 
         start = (top, 0)
         end = (bot, self.rows - 1)
+
         for i in range(0, self.cols):
             grid.append([])
             for j in range(0, self.rows):
                 grid[i].append(0)
 
-        print(start, end)
         result = self.findAllPaths(grid, start, end, length, result)
-        print(len(result))
         path = result[random.randrange(len(result) - 1)]
 
         for i in range(0, self.cols):
@@ -84,6 +97,8 @@ class Grid:
             for j in range(0, self.rows):
                 if path[i][j] == 1:
                     self.grid[i][j] = tileFactory.getTile("road", self.x + self.tileSize * i, self.y + self.tileSize * j, self.tileSize)
+
+        self.start = start
 
     def findAllPaths(self, grid, start, end, length, results):
 
@@ -94,7 +109,7 @@ class Grid:
         #if touches any tile other than previous
         if self.getNumGridNeighbors(grid, start) > 1:
             return results
-
+        
         grid[start[0]][start[1]] = 1
         length = length - 1
 

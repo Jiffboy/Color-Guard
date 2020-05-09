@@ -1,10 +1,22 @@
+from enum import Enum
+
+
+class Dir(Enum):
+    NORTH = 1
+    EAST = 2
+    SOUTH = 3
+    WEST = 4
+    NONE = 5
 
 
 class Tile:
-    x = 0
-    y = 0
-    size = 0
     name = ""
+    entry = Dir.NONE
+    exit = Dir.NONE
+    isTerrain = False
+    isTower = False
+    isGreyed = False
+
 
     def __init__(self, x, y, size):
         self.x = x

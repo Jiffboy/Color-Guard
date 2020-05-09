@@ -1,17 +1,20 @@
+import tile
 import emptyTile
 import redTile
 import blueTile
 import greenTile
 import roadTile
 
-def getTile(tile, x, y, size):
-    if tile == "empty":
+def getTile(tileType, x, y, size):
+    if tileType == "empty":
         return emptyTile.EmptyTile(x, y, size)
-    if tile == "red":
+    elif tileType == "red":
         return redTile.RedTile(x, y, size)
-    if tile == "blue":
+    elif tileType == "blue":
         return blueTile.BlueTile(x, y, size)
-    if tile == "green":
+    elif tileType == "green":
         return greenTile.GreenTile(x, y, size)
-    if tile == "road":
+    elif tileType == "road":
         return roadTile.RoadTile(x, y, size)
+    else:
+        return tile.Tile(x, y, size)
