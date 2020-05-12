@@ -33,3 +33,9 @@ class Item:
 
     def getTile(self):
         return tileFactory.getTile(self.tile.name, self.tile.x, self.tile.y, self.tile.size)
+
+    def isInItem(self, pos):
+        if self.x <= pos[0] <= self.x + self.width:
+            if self.y <= pos[1] <= self.y + self.height:
+                return True
+        return False

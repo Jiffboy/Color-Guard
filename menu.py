@@ -1,5 +1,6 @@
 import item
-import math
+import copy
+import pygame
 
 
 class Menu:
@@ -15,20 +16,23 @@ class Menu:
         self.itemWidth = itemDims[0]
         self.itemHeight = itemDims[1]
 
+        width = (pygame.display.get_surface().get_width() - 30 - (self.itemWidth * 3)) / 2
+
         self.items.append(item.Item("red", (self.x, self.y), (self.itemWidth, self.itemHeight)))
-        self.items.append(item.Item("blue", (self.x + self.itemWidth, self.y), (self.itemWidth, self.itemHeight)))
-        self.items.append(item.Item("green", (self.x + self.itemWidth * 2, self.y), (self.itemWidth, self.itemHeight)))
+        self.items.append(item.Item("blue", (self.x + width + self.itemWidth, self.y), (self.itemWidth, self.itemHeight)))
+        self.items.append(item.Item("green", (self.x + width * 2 + self.itemWidth * 2, self.y), (self.itemWidth, self.itemHeight)))
 
     def draw(self, screen):
         for menuItem in self.items:
             menuItem.draw(screen)
 
     def isInMenu(self, pos):
-        if self.x <= pos[0] <= self.x + self.itemWidth * len(self.items):
-            if self.y <= pos[1] <= self.y + self.itemHeight:
+        for item in self.items:
+            if item.isInItem(pos):
                 return True
         return False
 
     def getItem(self, pos):
-        itemNum = math.floor((pos[0] - self.x) / self.itemWidth)
-        return self.items[itemNum].getTile()
+        for item in self.items:
+            if item.isInItem(pos):
+                return copy.deepcopy(item.tile)

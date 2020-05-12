@@ -26,7 +26,7 @@ class Grid:
             for j in range(0, self.rows):
                 self.grid[i].append(tileFactory.getTile("empty", self.x + tileSize * i, self.y + tileSize * j, tileSize))
 
-        self.constructRoad(20)
+        self.constructRoad(18)
 
     def draw(self, screen):
         pygame.draw.rect(screen, (150, 150, 150), (self.x - 3, self.y - 3, self.tileSize * self.cols + 6, self.tileSize * self.rows + 6))
@@ -113,39 +113,39 @@ class Grid:
 
     def findAllPaths(self, grid, start, end, length, results):
 
-        #if been here before
+        # if been here before
         if grid[start[0]][start[1]] == 1:
             return results
 
-        #if touches any tile other than previous
+        # if touches any tile other than previous
         if self.getNumGridNeighbors(grid, start) > 1:
             return results
         
         grid[start[0]][start[1]] = 1
         length = length - 1
 
-        #if exhausted length allowance
+        # if exhausted length allowance
         if length == 0:
-            #if at the targeted ending point
+            # if at the targeted ending point
             if start == end:
                 temp = copy.deepcopy(grid)
                 results.append(temp)
             grid[start[0]][start[1]] = 0
             return results
 
-        #Recurse North if able
+        # Recurse North if able
         if start[1] != 0:
             results = self.findAllPaths(grid, (start[0], start[1] - 1), end, length, results)
 
-        #Recurse West if able
+        # Recurse West if able
         if start[0] != 0:
             results = self.findAllPaths(grid, (start[0] - 1, start[1]), end, length, results)
 
-        #Recurse South if able
+        # Recurse South if able
         if start[1] != self.rows - 1:
             results = self.findAllPaths(grid, (start[0], start[1] + 1), end, length, results)
 
-        #Recurse East if able
+        # Recurse East if able
         if start[0] != self.cols - 1:
             results = self.findAllPaths(grid, (start[0] + 1, start[1]), end, length, results)
 

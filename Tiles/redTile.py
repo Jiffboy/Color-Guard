@@ -1,12 +1,12 @@
-import tile
+from Tiles import tile
 import pygame
 
 
-class GreenTile(tile.Tile):
-    name = "green"
+class RedTile(tile.Tile):
+    name = "red"
     isTower = True
-    color = (0, 255, 0)
-    greyColor = (0, 100, 0)
+    color = (255, 0, 0)
+    greyColor = (100, 0, 0)
 
     def __init__(self, x, y, size):
         tile.Tile.__init__(self, x, y, size)

@@ -1,4 +1,4 @@
-import tile
+from Tiles import tile
 import pygame
 
 

@@ -1,9 +1,5 @@
-import tile
-import emptyTile
-import redTile
-import blueTile
-import greenTile
-import roadTile
+from Tiles import redTile, roadTile, greenTile, emptyTile, blueTile, tile
+
 
 def getTile(tileType, x, y, size):
     if tileType == "empty":

@@ -1,6 +1,6 @@
 import pygame
 import sys
-import tile
+from Tiles import tile
 import math
 import grid
 import menu
