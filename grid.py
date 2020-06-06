@@ -1,3 +1,4 @@
+from enemyManager import EnemyManager
 import tileFactory
 import math
 import random
@@ -20,6 +21,7 @@ class Grid:
         self.rows = startDims[0]
         self.cols = startDims[1]
         self.tileSize = tileSize
+        self.enemyManager = EnemyManager(self)
 
         for i in range(0, self.cols):
             self.grid.append([])
@@ -27,6 +29,7 @@ class Grid:
                 self.grid[i].append(tileFactory.getTile("empty", self.x + tileSize * i, self.y + tileSize * j, tileSize))
 
         self.constructRoad(18)
+        self.enemyManager.spawnEnemy(self.grid[self.start[0]][self.start[1]])
 
     def draw(self, screen):
         pygame.draw.rect(screen, (150, 150, 150), (self.x - 3, self.y - 3, self.tileSize * self.cols + 6, self.tileSize * self.rows + 6))
@@ -34,6 +37,7 @@ class Grid:
         for i in range(0, self.cols):
             for j in range(0, self.rows):
                 self.grid[i][j].draw(screen)
+        self.enemyManager.draw(screen)
 
     def isInGrid(self, pos):
         if self.x <= pos[0] <= self.x + self.tileSize * self.cols:
