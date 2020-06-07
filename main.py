@@ -23,7 +23,7 @@ clock = pygame.time.Clock()
 holdingTile = False
 heldTile = Tile(0, 0, 0)
 tileGrid = Grid((15, 15), (7, 11), 40)
-itemMenu = Menu((15, 350), (100, 100))
+itemMenu = Menu((15, 350), (100, 100), 470)
 controlBar = ControlBar((15, 310))
 
 while True:

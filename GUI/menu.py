@@ -10,13 +10,13 @@ class Menu:
     itemWidth = 0
     items = []
 
-    def __init__(self, startPos, itemDims):
+    def __init__(self, startPos, itemDims, width):
         self.x = startPos[0]
         self.y = startPos[1]
         self.itemWidth = itemDims[0]
         self.itemHeight = itemDims[1]
-
-        width = (pygame.display.get_surface().get_width() - 30 - (self.itemWidth * 3)) / 2
+        width = (width - 30 - (self.itemWidth * 3)) / 2
+        #width = (pygame.display.get_surface().get_width() - 30 - (self.itemWidth * 3)) / 2
 
         self.items.append(Item("red", (self.x, self.y), (self.itemWidth, self.itemHeight)))
         self.items.append(
