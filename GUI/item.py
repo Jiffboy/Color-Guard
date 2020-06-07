@@ -3,11 +3,6 @@ import tileFactory
 
 
 class Item:
-    x = 0
-    y = 0
-    width = 0
-    height = 0
-
     def __init__(self, name, startPos, dims):
         self.x = startPos[0]
         self.y = startPos[1]

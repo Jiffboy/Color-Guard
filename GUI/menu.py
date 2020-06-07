@@ -1,4 +1,4 @@
-import item
+from GUI.item import Item
 import copy
 import pygame
 
@@ -18,9 +18,11 @@ class Menu:
 
         width = (pygame.display.get_surface().get_width() - 30 - (self.itemWidth * 3)) / 2
 
-        self.items.append(item.Item("red", (self.x, self.y), (self.itemWidth, self.itemHeight)))
-        self.items.append(item.Item("blue", (self.x + width + self.itemWidth, self.y), (self.itemWidth, self.itemHeight)))
-        self.items.append(item.Item("green", (self.x + width * 2 + self.itemWidth * 2, self.y), (self.itemWidth, self.itemHeight)))
+        self.items.append(Item("red", (self.x, self.y), (self.itemWidth, self.itemHeight)))
+        self.items.append(
+            Item("blue", (self.x + width + self.itemWidth, self.y), (self.itemWidth, self.itemHeight)))
+        self.items.append(
+            Item("green", (self.x + width * 2 + self.itemWidth * 2, self.y), (self.itemWidth, self.itemHeight)))
 
     def draw(self, screen):
         for menuItem in self.items:

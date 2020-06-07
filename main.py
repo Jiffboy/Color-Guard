@@ -1,9 +1,11 @@
 import pygame
 import sys
-from Tiles import tile
 import math
-import grid
-import menu
+from Tiles.tile import Tile
+from grid import Grid
+from GUI.menu import Menu
+from GUI.controlBar import ControlBar, ControlAction
+
 
 pygame.init()
 screen = pygame.display.set_mode((500, 500))
@@ -17,9 +19,10 @@ pygame.display.set_caption('Testy time!')
 clock = pygame.time.Clock()
 
 holdingTile = False
-heldTile = tile.Tile(0, 0, 0)
-tileGrid = grid.Grid((15, 15), (7, 11), 40)
-itemMenu = menu.Menu((15, 350), (100, 100))
+heldTile = Tile(0, 0, 0)
+tileGrid = Grid((15, 15), (7, 11), 40)
+itemMenu = Menu((15, 350), (100, 100))
+controlBar = ControlBar((15, 310))
 
 while True:
     clock.tick(60)
@@ -37,6 +40,11 @@ while True:
                     pygame.mouse.set_visible(0)
                     holdingTile = True
                     tileGrid.showLines(True)
+                else:
+                    action = controlBar.getAction(pos)
+                    if action == ControlAction.START:
+                        tileGrid.startWave()
+
             else:
                 if tileGrid.isInGrid(pos):
                     if tileGrid.isPlaceableAtPos(pos):
@@ -47,7 +55,7 @@ while True:
                     heldTile = itemMenu.getItem(pos)
                     break
                 else:
-                    heldTile = heldTile = tile.Tile(0, 0, 0)
+                    heldTile = Tile(0, 0, 0)
                 pygame.mouse.set_visible(1)
                 holdingTile = False
                 tileGrid.showLines(False)
@@ -67,5 +75,6 @@ while True:
     tileGrid.update()
     tileGrid.draw(screen)
     itemMenu.draw(screen)
+    controlBar.draw(screen)
     heldTile.draw(screen)
     pygame.display.flip()

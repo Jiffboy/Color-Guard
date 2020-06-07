@@ -30,7 +30,6 @@ class Grid:
                 self.grid[i].append(tileFactory.getTile("empty", self.x + tileSize * i, self.y + tileSize * j, tileSize))
 
         self.constructRoad(18)
-        self.enemyManager.spawnEnemy(self.grid[self.start[0]][self.start[1]])
 
     def draw(self, screen):
         pygame.draw.rect(screen, (150, 150, 150), (self.x - 3, self.y - 3, self.tileSize * self.cols + 6, self.tileSize * self.rows + 6))
@@ -39,6 +38,9 @@ class Grid:
             for j in range(0, self.rows):
                 self.grid[i][j].draw(screen)
         self.enemyManager.draw(screen)
+
+    def startWave(self):
+        self.enemyManager.spawnEnemy(self.grid[self.start[0]][self.start[1]])
 
     def update(self):
         self.enemyManager.update()
