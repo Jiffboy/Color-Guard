@@ -126,6 +126,7 @@ class Grid:
 
         index = (start[0], start[1])
         self.grid[index[0]][index[1]].entry = Dir.NORTH
+        self.grid[end[0]][end[1]].exit = Dir.SOUTH
         while index != end:
             path[index[0]][index[1]] = -1
             # North if able

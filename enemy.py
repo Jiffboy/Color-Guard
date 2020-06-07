@@ -36,9 +36,13 @@ class Enemy:
                 self.redirect()
 
         if not self.currTile.isInTile((self.x, self.y)):
-            self.currTile = grid.getTileAtPos((self.x, self.y))
-            self.direction = self.getOppositeDirection(self.currTile.entry)
-            self.pastHalf = False
+            if grid.isInGrid((self.x, self.y)):
+                self.currTile = grid.getTileAtPos((self.x, self.y))
+                self.direction = self.getOppositeDirection(self.currTile.entry)
+                self.pastHalf = False
+            else:
+                return True
+        return False
 
 
 

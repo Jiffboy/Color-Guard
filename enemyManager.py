@@ -16,4 +16,6 @@ class EnemyManager:
 
     def update(self):
         for enemy in self.enemies:
-            enemy.update(self.grid)
+            delete = enemy.update(self.grid)
+            if delete:
+                self.enemies.remove(enemy)
