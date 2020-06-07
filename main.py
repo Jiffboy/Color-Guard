@@ -15,7 +15,9 @@ background.fill((250, 250, 250))
 
 screen.blit(background, (0, 0))
 pygame.display.flip()
-pygame.display.set_caption('Testy time!')
+pygame.display.set_caption('Color Guard')
+icon = pygame.image.load('resources/colorGuardIcon.png')
+pygame.display.set_icon(icon)
 clock = pygame.time.Clock()
 
 holdingTile = False
