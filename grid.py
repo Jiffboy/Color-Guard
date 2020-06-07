@@ -1,4 +1,5 @@
 from enemyManager import EnemyManager
+from Tiles.tile import Dir
 import tileFactory
 import math
 import random
@@ -39,6 +40,9 @@ class Grid:
                 self.grid[i][j].draw(screen)
         self.enemyManager.draw(screen)
 
+    def update(self):
+        self.enemyManager.update()
+
     def isInGrid(self, pos):
         if self.x <= pos[0] <= self.x + self.tileSize * self.cols:
             if self.y <= pos[1] <= self.y + self.tileSize * self.rows:
@@ -57,6 +61,13 @@ class Grid:
         col = math.floor(xDist / self.tileSize)
         row = math.floor(yDist / self.tileSize)
         self.setTile(col, row, tile)
+
+    def getTileAtPos(self, pos):
+        xDist = pos[0] - self.x
+        yDist = pos[1] - self.y
+        col = math.floor(xDist / self.tileSize)
+        row = math.floor(yDist / self.tileSize)
+        return self.grid[col][row]
 
     def isPlaceableAtPos(self, pos):
         try:
@@ -112,6 +123,42 @@ class Grid:
             for j in range(0, self.rows):
                 if path[i][j] == 1:
                     self.grid[i][j] = tileFactory.getTile("road", self.x + self.tileSize * i, self.y + self.tileSize * j, self.tileSize)
+
+        index = (start[0], start[1])
+        self.grid[index[0]][index[1]].entry = Dir.NORTH
+        while index != end:
+            path[index[0]][index[1]] = -1
+            # North if able
+            if index[1] != 0:
+                if path[index[0]][index[1]-1] > 0:
+                    self.grid[index[0]][index[1]].exit = Dir.NORTH
+                    self.grid[index[0]][index[1]-1].entry = Dir.SOUTH
+                    index = (index[0], index[1]-1)
+                    continue
+
+            # West if able
+            if index[0] != 0:
+                if path[index[0]-1][index[1]] > 0:
+                    self.grid[index[0]][index[1]].exit = Dir.WEST
+                    self.grid[index[0]-1][index[1]].entry = Dir.EAST
+                    index = (index[0]-1, index[1])
+                    continue
+
+            # South if able
+            if index[1] != self.rows - 1:
+                if path[index[0]][index[1] + 1] > 0:
+                    self.grid[index[0]][index[1]].exit = Dir.SOUTH
+                    self.grid[index[0]][index[1] + 1].entry = Dir.NORTH
+                    index = (index[0], index[1] + 1)
+                    continue
+
+            # East if able
+            if index[0] != self.cols - 1:
+                if path[index[0] + 1][index[1]] > 0:
+                    self.grid[index[0]][index[1]].exit = Dir.EAST
+                    self.grid[index[0] + 1][index[1]].entry = Dir.WEST
+                    index = (index[0] + 1, index[1])
+                    continue
 
         self.start = start
 

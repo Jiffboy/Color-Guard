@@ -28,3 +28,9 @@ class Tile:
     def updatePos(self, pos):
         self.x = pos[0]
         self.y = pos[1]
+
+    def isInTile(self, pos):
+        if self.x <= pos[0] <= self.x + self.size:
+            if self.y <= pos[1] <= self.y + self.size:
+                return True
+        return False

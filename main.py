@@ -64,6 +64,7 @@ while True:
         y = pos[1] - math.floor(heldTile.size / 2)
         heldTile.updatePos((x, y))
 
+    tileGrid.update()
     tileGrid.draw(screen)
     itemMenu.draw(screen)
     heldTile.draw(screen)
