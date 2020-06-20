@@ -12,7 +12,8 @@ class Enemy:
         self.pastHalf = False
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (255, 255, 255), (self.x - self.currTile.size/4, self.y- self.currTile.size/4, self.currTile.size / 2, self.currTile.size / 2))
+        pygame.draw.rect(screen, (150, 150, 150), (self.x - self.currTile.size / 4 - 1, self.y - self.currTile.size / 4- 1, self.currTile.size / 2 + 2, self.currTile.size / 2 + 2))
+        pygame.draw.rect(screen, (255, 255, 255), (self.x - self.currTile.size/4, self.y - self.currTile.size/4, self.currTile.size / 2, self.currTile.size / 2))
 
     def update(self, grid):
         if self.direction == Dir.SOUTH:

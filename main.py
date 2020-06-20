@@ -40,6 +40,7 @@ while True:
                 if itemMenu.isInMenu(pos):
                     heldTile = itemMenu.getItem(pos)
                     pygame.mouse.set_visible(0)
+                    heldTile.selected = True
                     holdingTile = True
                     tileGrid.showLines(True)
                 else:
@@ -51,10 +52,12 @@ while True:
                 if tileGrid.isInGrid(pos):
                     if tileGrid.isPlaceableAtPos(pos):
                         tileGrid.setTileAtPos(pos, heldTile)
+                        heldTile.selected = False
                     else:
                         break
                 elif itemMenu.isInMenu(pos):
                     heldTile = itemMenu.getItem(pos)
+                    heldTile.selected = True
                     break
                 else:
                     heldTile = Tile(0, 0, 0)

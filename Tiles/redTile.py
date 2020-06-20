@@ -1,18 +1,12 @@
-from Tiles import tile
+from Tiles import towerTile
 import pygame
 
 
-class RedTile(tile.Tile):
+class RedTile(towerTile.TowerTile):
     name = "red"
     isTower = True
     color = (255, 0, 0)
     greyColor = (100, 0, 0)
 
     def __init__(self, x, y, size):
-        tile.Tile.__init__(self, x, y, size)
-
-    def draw(self, screen):
-        if not self.isGreyed:
-            pygame.draw.rect(screen, self.color, (self.x, self.y, self.size, self.size))
-        else:
-            pygame.draw.rect(screen, self.greyColor, (self.x, self.y, self.size, self.size))
+        towerTile.TowerTile.__init__(self, x, y, size)
