@@ -3,7 +3,6 @@ from Tiles.tile import Dir
 import tileFactory
 import math
 import random
-import copy
 import pygame
 
 
@@ -29,7 +28,7 @@ class Grid:
             for j in range(0, self.rows):
                 self.grid[i].append(tileFactory.getTile("empty", self.x + tileSize * i, self.y + tileSize * j, tileSize))
 
-        self.constructRoad(18)
+        self.constructRoad(30)
 
     def draw(self, screen):
         pygame.draw.rect(screen, (150, 150, 150), (self.x - 3, self.y - 3, self.tileSize * self.cols + 6, self.tileSize * self.rows + 6))
@@ -94,7 +93,6 @@ class Grid:
 
     def constructRoad(self, length):
         grid = []
-        result = []
         even = False
 
         if length % 2 == 0:
@@ -111,14 +109,15 @@ class Grid:
 
         start = (top, 0)
         end = (bot, self.rows - 1)
+        print(start)
+        print(end)
 
         for i in range(0, self.cols):
             grid.append([])
             for j in range(0, self.rows):
                 grid[i].append(0)
 
-        result = self.findAllPaths(grid, start, end, length, result)
-        path = result[random.randrange(len(result) - 1)]
+        path = self.generatePath(grid, start, end, length)
 
         for i in range(0, self.cols):
             self.grid.append([])
@@ -165,47 +164,58 @@ class Grid:
 
         self.start = start
 
-    def findAllPaths(self, grid, start, end, length, results):
+    def generatePath(self, grid, start, end, length):
 
         # if been here before
         if grid[start[0]][start[1]] == 1:
-            return results
+            return grid
 
         # if touches any tile other than previous
         if self.getNumGridNeighbors(grid, start) > 1:
-            return results
-        
+            return grid
+
         grid[start[0]][start[1]] = 1
         length = length - 1
+        dirs = [0, 1, 2, 3]
+
+        # if at the end
+        if start == end:
+            # if desired length
+            if length == 0:
+                return grid
+            grid[start[0]][start[1]] = 0
+            return grid
 
         # if exhausted length allowance
         if length == 0:
-            # if at the targeted ending point
-            if start == end:
-                temp = copy.deepcopy(grid)
-                results.append(temp)
             grid[start[0]][start[1]] = 0
-            return results
+            return grid
 
-        # Recurse North if able
-        if start[1] != 0:
-            results = self.findAllPaths(grid, (start[0], start[1] - 1), end, length, results)
+        while len(dirs) != 0:
+            dirToGo = dirs[random.randrange(len(dirs))]
+            dirs.remove(dirToGo)
 
-        # Recurse West if able
-        if start[0] != 0:
-            results = self.findAllPaths(grid, (start[0] - 1, start[1]), end, length, results)
+            # Recurse North if able
+            if dirToGo == 0 and start[1] != 0:
+                self.generatePath(grid, (start[0], start[1] - 1), end, length)
 
-        # Recurse South if able
-        if start[1] != self.rows - 1:
-            results = self.findAllPaths(grid, (start[0], start[1] + 1), end, length, results)
+            # Recurse West if able
+            if dirToGo == 1 and start[0] != 0:
+                self.generatePath(grid, (start[0] - 1, start[1]), end, length)
 
-        # Recurse East if able
-        if start[0] != self.cols - 1:
-            results = self.findAllPaths(grid, (start[0] + 1, start[1]), end, length, results)
+            # Recurse South if able
+            if dirToGo == 2 and start[1] != self.rows - 1:
+                self.generatePath(grid, (start[0], start[1] + 1), end, length)
+
+            # Recurse East if able
+            if dirToGo == 3 and start[0] != self.cols - 1:
+                self.generatePath(grid, (start[0] + 1, start[1]), end, length)
+
+            if grid[end[0]][end[1]] == 1:
+                return grid
 
         grid[start[0]][start[1]] = 0
-
-        return results
+        return grid
 
     def getNumGridNeighbors(self, grid, point):
         count = 0
