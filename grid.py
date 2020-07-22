@@ -22,13 +22,7 @@ class Grid:
         self.cols = startDims[1]
         self.tileSize = tileSize
         self.enemyManager = EnemyManager(self)
-
-        for i in range(0, self.cols):
-            self.grid.append([])
-            for j in range(0, self.rows):
-                self.grid[i].append(tileFactory.getTile("empty", self.x + tileSize * i, self.y + tileSize * j, tileSize))
-
-        self.constructRoad(30)
+        self.regenerateGrid()
 
     def draw(self, screen):
         pygame.draw.rect(screen, (150, 150, 150), (self.x - 3, self.y - 3, self.tileSize * self.cols + 6, self.tileSize * self.rows + 6))
@@ -91,6 +85,17 @@ class Grid:
                     else:
                         self.grid[i][j].isGreyed = True
 
+    def regenerateGrid(self):
+        self.grid = []
+        for i in range(0, self.cols):
+            self.grid.append([])
+            for j in range(0, self.rows):
+                self.grid[i].append(
+                    tileFactory.getTile("empty", self.x + self.tileSize * i, self.y + self.tileSize * j, self.tileSize))
+
+        self.constructRoad(18)
+        self.enemyManager.despawnEnemies()
+
     def constructRoad(self, length):
         grid = []
         even = False
@@ -109,8 +114,6 @@ class Grid:
 
         start = (top, 0)
         end = (bot, self.rows - 1)
-        print(start)
-        print(end)
 
         for i in range(0, self.cols):
             grid.append([])

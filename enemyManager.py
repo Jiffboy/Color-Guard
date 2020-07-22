@@ -19,3 +19,6 @@ class EnemyManager:
             delete = enemy.update(self.grid)
             if delete:
                 self.enemies.remove(enemy)
+
+    def despawnEnemies(self):
+        self.enemies = []

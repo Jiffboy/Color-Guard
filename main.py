@@ -1,11 +1,11 @@
-import pygame
-import sys
-import math
 from Tiles.tile import Tile
 from grid import Grid
 from GUI.menu import Menu
 from GUI.controlBar import ControlBar, ControlAction
-
+import pygame
+import sys
+import math
+import copy
 
 pygame.init()
 screen = pygame.display.set_mode((500, 500))
@@ -47,12 +47,17 @@ while True:
                     action = controlBar.getAction(pos)
                     if action == ControlAction.START:
                         tileGrid.startWave()
+                    if action == ControlAction.RESET:
+                        tileGrid.regenerateGrid()
 
             else:
                 if tileGrid.isInGrid(pos):
                     if tileGrid.isPlaceableAtPos(pos):
-                        tileGrid.setTileAtPos(pos, heldTile)
+                        tile = copy.deepcopy(heldTile)
+                        tile.selected = False
+                        tileGrid.setTileAtPos(pos, tile)
                         heldTile.selected = False
+                        heldTile = Tile(0, 0, 0)
                     else:
                         break
                 elif itemMenu.isInMenu(pos):
