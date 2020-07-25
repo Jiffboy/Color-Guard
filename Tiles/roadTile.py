@@ -1,13 +1,15 @@
-from Tiles import tile
+from Tiles.tile import Tile, Dir
 import pygame
 
 
-class RoadTile(tile.Tile):
+class RoadTile(Tile):
     name = "road"
-    isTerrain = True
+    isRoad = True
+    entry = Dir.NONE
+    exit = Dir.NONE
 
     def __init__(self, x, y, size):
-        tile.Tile.__init__(self, x, y, size)
+        Tile.__init__(self, x, y, size)
 
     def draw(self, screen):
         pygame.draw.rect(screen, (155, 118, 83), (self.x, self.y, self.size, self.size))

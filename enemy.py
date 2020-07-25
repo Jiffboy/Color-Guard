@@ -10,10 +10,17 @@ class Enemy:
         self.direction = Dir.SOUTH
         self.speed = speed
         self.pastHalf = False
+        startTile.enterEnemy(self)
 
     def draw(self, screen):
         pygame.draw.rect(screen, (150, 150, 150), (self.x - self.currTile.size / 4 - 1, self.y - self.currTile.size / 4- 1, self.currTile.size / 2 + 2, self.currTile.size / 2 + 2))
         pygame.draw.rect(screen, (255, 255, 255), (self.x - self.currTile.size/4, self.y - self.currTile.size/4, self.currTile.size / 2, self.currTile.size / 2))
+
+    def isInRange(self, tower, range):
+        return True
+
+    def despawn(self):
+        self.currTile.exitEnemy(self)
 
     def update(self, grid):
         if self.direction == Dir.SOUTH:
@@ -38,14 +45,14 @@ class Enemy:
 
         if not self.currTile.isInTile((self.x, self.y)):
             if grid.isInGrid((self.x, self.y)):
+                self.currTile.exitEnemy(self)
                 self.currTile = grid.getTileAtPos((self.x, self.y))
+                self.currTile.enterEnemy(self)
                 self.direction = self.getOppositeDirection(self.currTile.entry)
                 self.pastHalf = False
             else:
                 return True
         return False
-
-
 
     def redirect(self):
         if self.direction == Dir.SOUTH:

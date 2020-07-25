@@ -37,6 +37,9 @@ class Grid:
 
     def update(self):
         self.enemyManager.update()
+        for i in range(0, self.cols):
+            for j in range(0, self.rows):
+                self.grid[i][j].update()
 
     def isInGrid(self, pos):
         if self.x <= pos[0] <= self.x + self.tileSize * self.cols:
@@ -49,6 +52,7 @@ class Grid:
         tile.y = self.y + self.tileSize * col
         tile.size = self.tileSize
         self.grid[row][col] = tile
+        tile.updateViewableTiles(self.grid)
 
     def setTileAtPos(self, pos, tile):
         xDist = pos[0] - self.x
@@ -70,7 +74,7 @@ class Grid:
             yDist = pos[1] - self.y
             col = math.floor(xDist / self.tileSize)
             row = math.floor(yDist / self.tileSize)
-            if (not self.grid[col][row].isTerrain) and (not self.grid[col][row].isTower):
+            if (not self.grid[col][row].isRoad) and (not self.grid[col][row].isTower):
                 return True
             return False
         except:
@@ -95,6 +99,10 @@ class Grid:
 
         self.constructRoad(18)
         self.enemyManager.despawnEnemies()
+
+    #####################################
+    #          Path Generation          #
+    #####################################
 
     def constructRoad(self, length):
         grid = []
@@ -123,7 +131,6 @@ class Grid:
         path = self.generatePath(grid, start, end, length)
 
         for i in range(0, self.cols):
-            self.grid.append([])
             for j in range(0, self.rows):
                 if path[i][j] == 1:
                     self.grid[i][j] = tileFactory.getTile("road", self.x + self.tileSize * i, self.y + self.tileSize * j, self.tileSize)

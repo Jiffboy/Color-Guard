@@ -11,11 +11,12 @@ class Dir(Enum):
 
 class Tile:
     name = ""
-    entry = Dir.NONE
-    exit = Dir.NONE
-    isTerrain = False
+    isRoad = False
     isTower = False
+    isRoad = False
     isGreyed = False
+    selected = False
+    enemies = []
 
     def __init__(self, x, y, size):
         self.x = x
@@ -23,6 +24,9 @@ class Tile:
         self.size = size
 
     def draw(self, screen):
+        pass
+
+    def update(self):
         pass
 
     def updatePos(self, pos):
@@ -34,3 +38,12 @@ class Tile:
             if self.y <= pos[1] <= self.y + self.size:
                 return True
         return False
+
+    def isInRadius(self):
+        return True
+
+    def enterEnemy(self, enemy):
+        self.enemies.append(enemy)
+
+    def exitEnemy(self, enemy):
+        self.enemies.remove(enemy)
