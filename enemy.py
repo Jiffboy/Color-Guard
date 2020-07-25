@@ -19,6 +19,16 @@ class Enemy:
     def isInRange(self, tower, range):
         return True
 
+    def isHit(self, point):
+        lowerX = self.x - self.currTile.size / 4 - 1
+        upperX = lowerX + self.currTile.size / 2 + 2
+        lowerY = self.y - self.currTile.size/4
+        upperY = lowerY + self.currTile.size / 2
+        if lowerX <= point[0] <= upperX:
+            if lowerY <= point[1] <= upperY:
+                return True
+        return False
+
     def despawn(self):
         self.currTile.exitEnemy(self)
 

@@ -8,8 +8,13 @@ class ProjectileManager:
         self.projectiles.remove(projectile)
 
     def update(self):
+        despawnList = []
         for projectile in self.projectiles:
-            projectile.update()
+            hit = projectile.update()
+            if hit:
+                despawnList.append(projectile)
+        for projectile in despawnList:
+            self.projectiles.remove(projectile)
 
     def draw(self, screen):
         for projectile in self.projectiles:
