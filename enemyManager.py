@@ -15,11 +15,14 @@ class EnemyManager:
             enemy.draw(screen)
 
     def update(self):
+        deadList = []
         for enemy in self.enemies:
             delete = enemy.update(self.grid)
             if delete:
                 enemy.despawn()
                 self.enemies.remove(enemy)
+                deadList.append(enemy)
+        return deadList
 
     def despawnEnemies(self):
         for enemy in self.enemies:

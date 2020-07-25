@@ -1,4 +1,5 @@
 from Tiles import tile
+from projectile import Projectile
 import pygame
 import math
 import time
@@ -39,5 +40,6 @@ class TowerTile(tile.Tile):
                 for enemy in tile.enemies:
                     if enemy.isInRange((self.x, self.y), self.radius):
                         self.lastShot = time.time()
-                        return None
+                        shot = Projectile((self.x, self.y), self.color, enemy)
+                        return shot
         return None

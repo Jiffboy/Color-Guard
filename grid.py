@@ -1,4 +1,5 @@
 from enemyManager import EnemyManager
+from projectileManager import ProjectileManager
 from Tiles.tile import Dir
 import tileFactory
 import math
@@ -22,6 +23,7 @@ class Grid:
         self.cols = startDims[1]
         self.tileSize = tileSize
         self.enemyManager = EnemyManager(self)
+        self.projectileManager = ProjectileManager()
         self.regenerateGrid()
 
     def draw(self, screen):
@@ -31,15 +33,21 @@ class Grid:
             for j in range(0, self.rows):
                 self.grid[i][j].draw(screen)
         self.enemyManager.draw(screen)
+        self.projectileManager.draw(screen)
 
     def startWave(self):
         self.enemyManager.spawnEnemy(self.grid[self.start[0]][self.start[1]])
 
     def update(self):
-        self.enemyManager.update()
+        deadEnemies = self.enemyManager.update()
+        for enemy in deadEnemies:
+            self.projectileManager.despawnProjectilesForEnemy(enemy)
         for i in range(0, self.cols):
             for j in range(0, self.rows):
-                self.grid[i][j].update()
+                shot = self.grid[i][j].update()
+                if shot is not None:
+                    self.projectileManager.addProjectile(shot)
+        self.projectileManager.update()
 
     def isInGrid(self, pos):
         if self.x <= pos[0] <= self.x + self.tileSize * self.cols:
@@ -98,6 +106,7 @@ class Grid:
                     tileFactory.getTile("empty", self.x + self.tileSize * i, self.y + self.tileSize * j, self.tileSize))
 
         self.constructRoad(18)
+        self.projectileManager.despawnProjectiles()
         self.enemyManager.despawnEnemies()
 
     #####################################
