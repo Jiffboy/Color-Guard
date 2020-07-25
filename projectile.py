@@ -10,6 +10,7 @@ class Projectile:
         self.y = origin[1]
         self.color = color
         self.target = target
+        self.damage = 10
 
     def update(self):
         xDist = abs(self.target.x - self.x)
@@ -33,7 +34,9 @@ class Projectile:
 
         hit = self.target.isHit((self.x, self.y))
         if hit:
-            self.target.takeDamage(self.)
+            self.target.takeDamage(self.damage)
+            return True
+        return False
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, (self.x + 4, self.y + 4, 8, 8))

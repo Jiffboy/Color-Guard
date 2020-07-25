@@ -10,29 +10,39 @@ class Enemy:
         self.direction = Dir.SOUTH
         self.speed = speed
         self.pastHalf = False
+        self.health = 100
+        self.damageTaken = 0
         startTile.enterEnemy(self)
 
     def draw(self, screen):
         pygame.draw.rect(screen, (150, 150, 150), (self.x - self.currTile.size / 4 - 1, self.y - self.currTile.size / 4- 1, self.currTile.size / 2 + 2, self.currTile.size / 2 + 2))
         pygame.draw.rect(screen, (255, 255, 255), (self.x - self.currTile.size/4, self.y - self.currTile.size/4, self.currTile.size / 2, self.currTile.size / 2))
+        if self.damageTaken > 0:
+            pygame.draw.rect(screen, (255, 0, 0), (self.x - self.currTile.size / 4, self.y - self.currTile.size / 4, self.currTile.size / 2, (self.currTile.size / 2) * (self.damageTaken / self.health)))
+
 
     def isInRange(self, tower, range):
         return True
 
     def isHit(self, point):
-        lowerX = self.x - self.currTile.size / 4 - 1
-        upperX = lowerX + self.currTile.size / 2 + 2
-        lowerY = self.y - self.currTile.size/4
+        lowerX = self.x - self.currTile.size / 4
+        upperX = lowerX + self.currTile.size / 2
+        lowerY = self.y - self.currTile.size / 4
         upperY = lowerY + self.currTile.size / 2
         if lowerX <= point[0] <= upperX:
             if lowerY <= point[1] <= upperY:
                 return True
         return False
 
+    def takeDamage(self, damage):
+        self.damageTaken += damage
+
     def despawn(self):
         self.currTile.exitEnemy(self)
 
     def update(self, grid):
+        if self.damageTaken >= self.health:
+            return True
         if self.direction == Dir.SOUTH:
             self.y = self.y + self.speed
             if not self.pastHalf and self.y >= self.currTile.y + self.currTile.size / 2:
