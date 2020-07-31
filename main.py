@@ -2,13 +2,22 @@ from Tiles.tile import Tile
 from grid import Grid
 from GUI.menu import Menu
 from GUI.controlBar import ControlBar, ControlAction
+from GUI.selectedItemDisplay import SelectedItemDisplay
 import pygame
 import sys
 import math
 import copy
+windowWidth = 750
+windowHeight = 500
+
+def preventSpill(screen):
+    pygame.draw.rect(screen, (255, 255, 255), (0, 0, tileGrid.x - tileGrid.borderWidth, tileGrid.y + tileGrid.tileSize * tileGrid.rows + tileGrid.borderWidth))
+    pygame.draw.rect(screen, (255, 255, 255), (0, 0, tileGrid.x + tileGrid.tileSize * tileGrid.cols + tileGrid.borderWidth, tileGrid.x - tileGrid.borderWidth))
+    pygame.draw.rect(screen, (255, 255, 255), (tileGrid.x + tileGrid.tileSize * tileGrid.cols + tileGrid.borderWidth, 0, windowWidth, windowHeight))
+    pygame.draw.rect(screen, (255, 255, 255), (0, tileGrid.y + tileGrid.tileSize * tileGrid.rows + tileGrid.borderWidth, windowWidth, windowHeight))
 
 pygame.init()
-screen = pygame.display.set_mode((500, 500))
+screen = pygame.display.set_mode((windowWidth, windowHeight))
 background = pygame.Surface(screen.get_size())
 background = background.convert()
 background.fill((250, 250, 250))
@@ -22,9 +31,11 @@ clock = pygame.time.Clock()
 
 holdingTile = False
 heldTile = Tile(0, 0, 0)
+selectedTile = heldTile
 tileGrid = Grid((15, 15), (7, 11), 40)
 itemMenu = Menu((15, 350), (100, 100), 470)
 controlBar = ControlBar((15, 310))
+selectedItemDisplay = SelectedItemDisplay((10,110))
 
 while True:
     clock.tick(60)
@@ -37,17 +48,21 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
             if not holdingTile:
+                selectedTile.selected = False
                 if itemMenu.isInMenu(pos):
                     heldTile = itemMenu.getItem(pos)
                     pygame.mouse.set_visible(0)
                     heldTile.selected = True
                     holdingTile = True
                     tileGrid.showLines(True)
+                elif tileGrid.isInGrid(pos):
+                    selectedTile = tileGrid.getTileAtPos(pos)
+                    selectedTile.selected = True
                 else:
                     action = controlBar.getAction(pos)
                     if action == ControlAction.START:
                         tileGrid.startWave()
-                    if action == ControlAction.RESET:
+                    elif action == ControlAction.RESET:
                         tileGrid.regenerateGrid()
 
             else:
@@ -84,6 +99,8 @@ while True:
 
     tileGrid.update()
     tileGrid.draw(screen)
+    selectedTile.draw(screen)
+    preventSpill(screen)
     itemMenu.draw(screen)
     controlBar.draw(screen)
     heldTile.draw(screen)

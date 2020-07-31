@@ -16,6 +16,7 @@ class Grid:
     grid = []
     start = (0, 0)
     linesOn = False
+    borderWidth = 3
 
     def __init__(self, startPos, startDims, tileSize):
         self.x = startPos[0]
@@ -28,7 +29,7 @@ class Grid:
         self.regenerateGrid()
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (150, 150, 150), (self.x - 3, self.y - 3, self.tileSize * self.cols + 6, self.tileSize * self.rows + 6))
+        pygame.draw.rect(screen, (150, 150, 150), (self.x - self.borderWidth, self.y - self.borderWidth, self.tileSize * self.cols + 2*self.borderWidth, self.tileSize * self.rows + 2*self.borderWidth))
         pygame.draw.rect(screen, (255, 255, 255), (self.x, self.y, self.tileSize * self.cols, self.tileSize * self.rows))
         for i in range(0, self.cols):
             for j in range(0, self.rows):
