@@ -21,11 +21,12 @@ class TowerTile(tile.Tile):
     def draw(self, screen):
         if not self.isGreyed:
             pygame.draw.rect(screen, self.color, (self.x + 4, self.y + 4, self.size - 8, self.size - 8))
+            if self.selected:
+                pygame.draw.circle(screen, self.color, (math.floor(self.x + self.size / 2), math.floor(self.y + self.size / 2)), self.radius, 1)
         else:
-            pygame.draw.rect(screen, self.greyColor, (self.x, self.y, self.size, self.size))
-        if self.selected:
-            pygame.draw.arc(screen, self.color, [self.x-self.radius + self.size/2, self.y-self.radius + self.size/2, 2*self.radius, 2*self.radius], math.pi, 2*math.pi)
-            pygame.draw.arc(screen, self.color, [self.x-self.radius + self.size/2, self.y-self.radius + self.size/2, 2*self.radius, 2*self.radius], 2*math.pi, math.pi)
+            pygame.draw.rect(screen, self.greyColor, (self.x + 4, self.y + 4, self.size - 8, self.size - 8))
+            if self.selected:
+                pygame.draw.circle(screen, self.greyColor, (math.floor(self.x + self.size / 2), math.floor(self.y + self.size / 2)), self.radius, 1)
 
     def updateViewableTiles(self, grid):
         for i in range(len(grid)):
