@@ -48,7 +48,9 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
             if not holdingTile:
-                selectedTile.selected = False
+                if selectedTile is not None:
+                    selectedTile.selected = False
+                    selectedTile = None
                 if itemMenu.isInMenu(pos):
                     heldTile = itemMenu.getItem(pos)
                     pygame.mouse.set_visible(0)
@@ -64,12 +66,13 @@ while True:
                         tileGrid.startWave()
                     elif action == ControlAction.RESET:
                         tileGrid.regenerateGrid()
+                        selectedTile = None
 
             else:
                 if tileGrid.isInGrid(pos):
                     if tileGrid.isPlaceableAtPos(pos):
                         tile = copy.deepcopy(heldTile)
-                        tile.selected = False
+                        selectedTile = tile
                         tileGrid.setTileAtPos(pos, tile)
                         heldTile.selected = False
                         heldTile = Tile(0, 0, 0)
@@ -99,7 +102,8 @@ while True:
 
     tileGrid.update()
     tileGrid.draw(screen)
-    selectedTile.draw(screen)
+    if selectedTile is not None:
+        selectedTile.draw(screen)
     preventSpill(screen)
     itemMenu.draw(screen)
     controlBar.draw(screen)
