@@ -15,6 +15,7 @@ class Grid:
     tileSize = 0
     grid = []
     start = (0, 0)
+    linesOn = False
 
     def __init__(self, startPos, startDims, tileSize):
         self.x = startPos[0]
@@ -32,6 +33,12 @@ class Grid:
         for i in range(0, self.cols):
             for j in range(0, self.rows):
                 self.grid[i][j].draw(screen)
+
+        if self.linesOn:
+            for i in range(1, self.cols):
+                pygame.draw.line(screen, (150, 150, 150), (self.x + self.tileSize * i, self.y), (self.x + self.tileSize * i, self.y + self.tileSize * self.rows))
+            for i in range(1, self.rows):
+                pygame.draw.line(screen, (150, 150, 150), (self.x, self.y + self.tileSize * i), (self.x + self.tileSize * self.cols, self.y + self.tileSize * i))
         self.enemyManager.draw(screen)
         self.projectileManager.draw(screen)
 
@@ -89,13 +96,7 @@ class Grid:
             return False
 
     def showLines(self, show):
-        for i in range(0, self.cols):
-            for j in range(0, self.rows):
-                if self.grid[i][j].name == "empty":
-                    if show:
-                        self.grid[i][j].isGreyed = False
-                    else:
-                        self.grid[i][j].isGreyed = True
+        self.linesOn = show
 
     def regenerateGrid(self):
         self.grid = []

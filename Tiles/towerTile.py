@@ -40,6 +40,6 @@ class TowerTile(tile.Tile):
                 for enemy in tile.enemies:
                     if enemy.isInRange((self.x, self.y), self.radius):
                         self.lastShot = time.time()
-                        shot = Projectile((self.x, self.y), self.color, enemy)
+                        shot = Projectile((self.x + self.size / 2, self.y + self.size / 2), self.color, enemy)
                         return shot
         return None
