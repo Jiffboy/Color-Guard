@@ -1,5 +1,6 @@
 from Tiles.tile import Dir
 import pygame
+import math
 
 
 class Enemy:
@@ -12,13 +13,31 @@ class Enemy:
         self.pastHalf = False
         self.health = 100
         self.damageTaken = 0
+        self.color = (255, 255, 255)
         startTile.enterEnemy(self)
 
     def draw(self, screen):
+        length = (self.currTile.size / 2) * (1 - self.damageTaken / self.health)
+        red = math.floor(255 * ((self.health - self.damageTaken) / self.health) + self.color[0] * (self.damageTaken / self.health))
+        green = math.floor(255 * ((self.health - self.damageTaken) / self.health) + self.color[1] * (self.damageTaken / self.health))
+        blue = math.floor(255 * ((self.health - self.damageTaken) / self.health) + self.color[2] * (self.damageTaken / self.health))
+
+        if red < 0:
+            red = 0
+        if green < 0:
+            green = 0
+        if blue < 0:
+            blue = 0
+        if red > 255:
+            red = 255
+        if green > 255:
+            green = 255
+        if blue > 255:
+            blue = 255
+
         pygame.draw.rect(screen, (150, 150, 150), (self.x - self.currTile.size / 4 - 1, self.y - self.currTile.size / 4- 1, self.currTile.size / 2 + 2, self.currTile.size / 2 + 2))
-        pygame.draw.rect(screen, (255, 255, 255), (self.x - self.currTile.size/4, self.y - self.currTile.size/4, self.currTile.size / 2, self.currTile.size / 2))
-        if self.damageTaken > 0:
-            pygame.draw.rect(screen, (255, 0, 0), (self.x - self.currTile.size / 4, self.y - self.currTile.size / 4, self.currTile.size / 2, (self.currTile.size / 2) * (self.damageTaken / self.health)))
+        pygame.draw.rect(screen, (red, green, blue), (self.x - self.currTile.size/4, self.y - self.currTile.size/4, self.currTile.size / 2, self.currTile.size / 2))
+        pygame.draw.rect(screen, (255,255,255), (self.x - (length / 2), self.y - 2, length, 4))
 
 
     def isInRange(self, tower, range):
@@ -34,8 +53,18 @@ class Enemy:
                 return True
         return False
 
-    def takeDamage(self, damage):
+    def takeDamage(self, damage, color):
         self.damageTaken += damage
+        if self.damageTaken != 0:
+            red = math.ceil(color[0] * (damage / self.damageTaken) +
+                            self.color[0] * ((self.damageTaken - damage) / self.damageTaken))
+            green = math.ceil(color[1] * (damage / self.damageTaken) +
+                            self.color[1] * ((self.damageTaken - damage) / self.damageTaken))
+            blue = math.ceil(color[2] * (damage / self.damageTaken) +
+                            self.color[2] * ((self.damageTaken - damage) / self.damageTaken))
+            self.color = (red, green, blue)
+        else:
+            self.color = color
 
     def despawn(self):
         self.currTile.exitEnemy(self)

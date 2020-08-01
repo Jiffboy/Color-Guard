@@ -30,7 +30,7 @@ class Grid:
 
     def draw(self, screen):
         pygame.draw.rect(screen, (150, 150, 150), (self.x - self.borderWidth, self.y - self.borderWidth, self.tileSize * self.cols + 2*self.borderWidth, self.tileSize * self.rows + 2*self.borderWidth))
-        pygame.draw.rect(screen, (255, 255, 255), (self.x, self.y, self.tileSize * self.cols, self.tileSize * self.rows))
+        pygame.draw.rect(screen, (200, 200, 200), (self.x, self.y, self.tileSize * self.cols, self.tileSize * self.rows))
         for i in range(0, self.cols):
             for j in range(0, self.rows):
                 self.grid[i][j].draw(screen)

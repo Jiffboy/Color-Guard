@@ -7,17 +7,17 @@ import pygame
 import sys
 import math
 import copy
-windowWidth = 750
-windowHeight = 500
+import globals
+
 
 def preventSpill(screen):
     pygame.draw.rect(screen, (255, 255, 255), (0, 0, tileGrid.x - tileGrid.borderWidth, tileGrid.y + tileGrid.tileSize * tileGrid.rows + tileGrid.borderWidth))
     pygame.draw.rect(screen, (255, 255, 255), (0, 0, tileGrid.x + tileGrid.tileSize * tileGrid.cols + tileGrid.borderWidth, tileGrid.x - tileGrid.borderWidth))
-    pygame.draw.rect(screen, (255, 255, 255), (tileGrid.x + tileGrid.tileSize * tileGrid.cols + tileGrid.borderWidth, 0, windowWidth, windowHeight))
-    pygame.draw.rect(screen, (255, 255, 255), (0, tileGrid.y + tileGrid.tileSize * tileGrid.rows + tileGrid.borderWidth, windowWidth, windowHeight))
+    pygame.draw.rect(screen, (255, 255, 255), (tileGrid.x + tileGrid.tileSize * tileGrid.cols + tileGrid.borderWidth, 0, globals.windowWidth, globals.windowHeight))
+    pygame.draw.rect(screen, (255, 255, 255), (0, tileGrid.y + tileGrid.tileSize * tileGrid.rows + tileGrid.borderWidth, globals.windowWidth, globals.windowHeight))
 
 pygame.init()
-screen = pygame.display.set_mode((windowWidth, windowHeight))
+screen = pygame.display.set_mode((globals.windowWidth, globals.windowHeight))
 background = pygame.Surface(screen.get_size())
 background = background.convert()
 background.fill((250, 250, 250))
@@ -88,8 +88,6 @@ while True:
                 holdingTile = False
                 tileGrid.showLines(False)
 
-    background.fill((250, 250, 250))
-    screen.blit(background, (0, 0))
     if holdingTile:
         pos = pygame.mouse.get_pos()
         if tileGrid.isPlaceableAtPos(pos):
@@ -99,6 +97,9 @@ while True:
         x = pos[0] - math.floor(heldTile.size / 2)
         y = pos[1] - math.floor(heldTile.size / 2)
         heldTile.updatePos((x, y))
+
+    background.fill((250, 250, 250))
+    screen.blit(background, (0, 0))
 
     tileGrid.update()
     tileGrid.draw(screen)

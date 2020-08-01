@@ -9,7 +9,7 @@ class TowerTile(tile.Tile):
     name = "green"
     isTower = True
     color = (0, 255, 0)
-    greyColor = (0, 100, 0)
+    greyColor = (0, 100, 0, 150)
     tilesInRange = []
     radius = 100
     fireRate = 1
@@ -20,6 +20,7 @@ class TowerTile(tile.Tile):
 
     def draw(self, screen):
         if not self.isGreyed:
+            pygame.draw.rect(screen, self.greyColor, (self.x + 3, self.y + 3, self.size - 6, self.size - 6))
             pygame.draw.rect(screen, self.color, (self.x + 4, self.y + 4, self.size - 8, self.size - 8))
             if self.selected:
                 pygame.draw.circle(screen, self.color, (math.floor(self.x + self.size / 2), math.floor(self.y + self.size / 2)), self.radius, 1)

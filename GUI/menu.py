@@ -23,6 +23,7 @@ class Menu:
             Item("blue", (self.x + width + self.itemWidth, self.y), (self.itemWidth, self.itemHeight)))
         self.items.append(
             Item("green", (self.x + width * 2 + self.itemWidth * 2, self.y), (self.itemWidth, self.itemHeight)))
+        self.items.append(Item("yellow", (self.x + width * 3 + self.itemWidth * 3, self.y), (self.itemWidth, self.itemHeight)))
 
     def draw(self, screen):
         for menuItem in self.items:

@@ -34,7 +34,7 @@ class Projectile:
 
         hit = self.target.isHit((self.x, self.y))
         if hit:
-            self.target.takeDamage(self.damage)
+            self.target.takeDamage(self.damage, self.color)
             return True
         return False
 
