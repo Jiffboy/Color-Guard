@@ -29,6 +29,10 @@ class TowerTile(tile.Tile):
             if self.selected:
                 pygame.draw.circle(screen, self.greyColor, (math.floor(self.x + self.size / 2), math.floor(self.y + self.size / 2)), self.radius, 1)
 
+    def drawInBounds(self, x, y, size, screen):
+        pygame.draw.rect(screen, self.greyColor, (x - size / 2, y - size / 2, size, size))
+        pygame.draw.rect(screen, self.color, (x - size / 2 + 1, y - size / 2 + 1, size - 2, size - 2))
+
     def updateViewableTiles(self, grid):
         for i in range(len(grid)):
             for j in range(len(grid[0])):

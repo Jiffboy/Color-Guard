@@ -26,6 +26,9 @@ class Tile:
     def draw(self, screen):
         pass
 
+    def drawInBounds(self, x, y, width, height):
+        pass
+
     def update(self):
         pass
 
