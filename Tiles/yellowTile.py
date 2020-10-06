@@ -8,6 +8,8 @@ class YellowTile(towerTile.TowerTile):
     color = (255, 255, 0)
     greyColor = (100, 100, 0)
     radius = 150
+    damage = 40
+    fireRate = 1
 
     def __init__(self, x, y, size):
         towerTile.TowerTile.__init__(self, x, y, size)

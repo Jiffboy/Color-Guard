@@ -14,6 +14,7 @@ class TowerTile(tile.Tile):
     radius = 100
     fireRate = 1
     lastShot = 0
+    damage = 10
 
     def __init__(self, x, y, size):
         tile.Tile.__init__(self, x, y, size)
@@ -29,7 +30,12 @@ class TowerTile(tile.Tile):
             if self.selected:
                 pygame.draw.circle(screen, self.greyColor, (math.floor(self.x + self.size / 2), math.floor(self.y + self.size / 2)), self.radius, 1)
 
+    def drawInBounds(self, x, y, size, screen):
+        pygame.draw.rect(screen, self.greyColor, (x - size / 2, y - size / 2, size, size))
+        pygame.draw.rect(screen, self.color, (x - size / 2 + 1, y - size / 2 + 1, size - 2, size - 2))
+
     def updateViewableTiles(self, grid):
+        self.tilesInRange.clear()
         for i in range(len(grid)):
             for j in range(len(grid[0])):
                 if grid[i][j].isInRadius():
@@ -42,6 +48,6 @@ class TowerTile(tile.Tile):
                 for enemy in tile.enemies:
                     if enemy.isInRange((self.x, self.y), self.radius):
                         self.lastShot = time.time()
-                        shot = Projectile((self.x + self.size / 2, self.y + self.size / 2), self.color, enemy)
+                        shot = Projectile((self.x + self.size / 2, self.y + self.size / 2), self.color, enemy, self.damage)
                         return shot
         return None

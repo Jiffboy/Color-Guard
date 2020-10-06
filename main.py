@@ -1,8 +1,10 @@
 from Tiles.tile import Tile
+from Tiles.emptyTile import EmptyTile
+from Tiles.towerTile import TowerTile
 from grid import Grid
 from GUI.menu import Menu
 from GUI.controlBar import ControlBar, ControlAction
-from GUI.selectedItemDisplay import SelectedItemDisplay
+from GUI.selectedTileDisplay import SelectedTileDisplay, TileAction
 import pygame
 import sys
 import math
@@ -15,6 +17,11 @@ def preventSpill(screen):
     pygame.draw.rect(screen, (255, 255, 255), (0, 0, tileGrid.x + tileGrid.tileSize * tileGrid.cols + tileGrid.borderWidth, tileGrid.x - tileGrid.borderWidth))
     pygame.draw.rect(screen, (255, 255, 255), (tileGrid.x + tileGrid.tileSize * tileGrid.cols + tileGrid.borderWidth, 0, globals.windowWidth, globals.windowHeight))
     pygame.draw.rect(screen, (255, 255, 255), (0, tileGrid.y + tileGrid.tileSize * tileGrid.rows + tileGrid.borderWidth, globals.windowWidth, globals.windowHeight))
+
+
+tileSize = 40
+gridWidth = 11
+gridHeight = 7
 
 pygame.init()
 screen = pygame.display.set_mode((globals.windowWidth, globals.windowHeight))
@@ -31,11 +38,10 @@ clock = pygame.time.Clock()
 
 holdingTile = False
 heldTile = Tile(0, 0, 0)
-selectedTile = heldTile
-tileGrid = Grid((15, 15), (7, 11), 40)
-itemMenu = Menu((15, 350), (100, 100), 470)
-controlBar = ControlBar((15, 310))
-selectedItemDisplay = SelectedItemDisplay((10,110))
+tileGrid = Grid((globals.windowBorder, globals.windowBorder), (gridHeight, gridWidth), tileSize)
+itemMenu = Menu((globals.windowBorder, 350), (100, 100), 470)
+controlBar = ControlBar((globals.windowBorder, 310))
+selectedTile = SelectedTileDisplay((globals.windowBorder + gridWidth * tileSize + tileGrid.borderWidth * 2, 15))
 
 while True:
     clock.tick(60)
@@ -48,48 +54,54 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
             if not holdingTile:
-                if selectedTile is not None:
-                    selectedTile.selected = False
-                    selectedTile = None
                 if itemMenu.isInMenu(pos):
                     heldTile = itemMenu.getItem(pos)
                     pygame.mouse.set_visible(0)
-                    heldTile.selected = True
+                    selectedTile.updateSelectedTile(itemMenu.getItem(pos))
                     holdingTile = True
                     tileGrid.showLines(True)
                 elif tileGrid.isInGrid(pos):
-                    selectedTile = tileGrid.getTileAtPos(pos)
-                    selectedTile.selected = True
+                    selectedTile.updateSelectedTile(tileGrid.getTileAtPos(pos))
                 else:
                     action = controlBar.getAction(pos)
-                    if action == ControlAction.START:
+                    if action == ControlAction.NONE:
+                        action = selectedTile.getAction(pos)
+                        if action == TileAction.NONE:
+                            selectedTile.updateSelectedTile(None)
+                        elif action == TileAction.DELETE:
+                            if issubclass(selectedTile.tile.__class__, TowerTile):
+                                empty = EmptyTile(selectedTile.tile.x, selectedTile.tile.y, selectedTile.tile.size)
+                                tileGrid.setTileAtPos((selectedTile.tile.x, selectedTile.tile.y), empty)
+                                selectedTile.updateSelectedTile(None)
+                    elif action == ControlAction.START:
                         tileGrid.startWave()
                     elif action == ControlAction.RESET:
                         tileGrid.regenerateGrid()
-                        selectedTile = None
+                        selectedTile.updateSelectedTile(None)
 
             else:
                 if tileGrid.isInGrid(pos):
                     if tileGrid.isPlaceableAtPos(pos):
                         tile = copy.deepcopy(heldTile)
-                        selectedTile = tile
+                        selectedTile.updateSelectedTile(tile)
                         tileGrid.setTileAtPos(pos, tile)
-                        heldTile.selected = False
                         heldTile = Tile(0, 0, 0)
                     else:
                         break
                 elif itemMenu.isInMenu(pos):
                     heldTile = itemMenu.getItem(pos)
-                    heldTile.selected = True
+                    selectedTile.updateSelectedTile(heldTile)
                     break
                 else:
                     heldTile = Tile(0, 0, 0)
+                    selectedTile.updateSelectedTile(None)
                 pygame.mouse.set_visible(1)
                 holdingTile = False
                 tileGrid.showLines(False)
 
     if holdingTile:
         pos = pygame.mouse.get_pos()
+        heldTile.selected = True
         if tileGrid.isPlaceableAtPos(pos):
             heldTile.isGreyed = False
         else:
@@ -103,9 +115,8 @@ while True:
 
     tileGrid.update()
     tileGrid.draw(screen)
-    if selectedTile is not None:
-        selectedTile.draw(screen)
     preventSpill(screen)
+    selectedTile.draw(screen)
     itemMenu.draw(screen)
     controlBar.draw(screen)
     heldTile.draw(screen)
