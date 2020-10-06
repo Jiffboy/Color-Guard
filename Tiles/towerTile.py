@@ -34,6 +34,7 @@ class TowerTile(tile.Tile):
         pygame.draw.rect(screen, self.color, (x - size / 2 + 1, y - size / 2 + 1, size - 2, size - 2))
 
     def updateViewableTiles(self, grid):
+        self.tilesInRange.clear()
         for i in range(len(grid)):
             for j in range(len(grid[0])):
                 if grid[i][j].isInRadius():

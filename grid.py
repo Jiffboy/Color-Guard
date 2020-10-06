@@ -1,6 +1,7 @@
 from enemyManager import EnemyManager
 from projectileManager import ProjectileManager
 from Tiles.tile import Dir
+from Tiles.towerTile import TowerTile
 import tileFactory
 import math
 import random
@@ -31,9 +32,13 @@ class Grid:
     def draw(self, screen):
         pygame.draw.rect(screen, (150, 150, 150), (self.x - self.borderWidth, self.y - self.borderWidth, self.tileSize * self.cols + 2*self.borderWidth, self.tileSize * self.rows + 2*self.borderWidth))
         pygame.draw.rect(screen, (200, 200, 200), (self.x, self.y, self.tileSize * self.cols, self.tileSize * self.rows))
+        selected = None
         for i in range(0, self.cols):
             for j in range(0, self.rows):
-                self.grid[i][j].draw(screen)
+                if self.grid[i][j].selected:
+                    selected = self.grid[i][j]
+                else:
+                    self.grid[i][j].draw(screen)
 
         if self.linesOn:
             for i in range(1, self.cols):
@@ -42,6 +47,8 @@ class Grid:
                 pygame.draw.line(screen, (150, 150, 150), (self.x, self.y + self.tileSize * i), (self.x + self.tileSize * self.cols, self.y + self.tileSize * i))
         self.enemyManager.draw(screen)
         self.projectileManager.draw(screen)
+        if selected is not None:
+            selected.draw(screen)
 
     def startWave(self):
         self.enemyManager.spawnEnemy(self.grid[self.start[0]][self.start[1]])
@@ -68,7 +75,10 @@ class Grid:
         tile.y = self.y + self.tileSize * col
         tile.size = self.tileSize
         self.grid[row][col] = tile
-        tile.updateViewableTiles(self.grid)
+        for row in self.grid:
+            for cTile in row:
+                if issubclass(cTile.__class__, TowerTile):
+                    cTile.updateViewableTiles(self.grid)
 
     def setTileAtPos(self, pos, tile):
         xDist = pos[0] - self.x

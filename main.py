@@ -1,8 +1,10 @@
 from Tiles.tile import Tile
+from Tiles.emptyTile import EmptyTile
+from Tiles.towerTile import TowerTile
 from grid import Grid
 from GUI.menu import Menu
 from GUI.controlBar import ControlBar, ControlAction
-from GUI.selectedTileDisplay import SelectedTileDisplay
+from GUI.selectedTileDisplay import SelectedTileDisplay, TileAction
 import pygame
 import sys
 import math
@@ -52,8 +54,6 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
             if not holdingTile:
-                if selectedTile.getTile() is not None:
-                    selectedTile.updateSelectedTile(None)
                 if itemMenu.isInMenu(pos):
                     heldTile = itemMenu.getItem(pos)
                     pygame.mouse.set_visible(0)
@@ -64,7 +64,16 @@ while True:
                     selectedTile.updateSelectedTile(tileGrid.getTileAtPos(pos))
                 else:
                     action = controlBar.getAction(pos)
-                    if action == ControlAction.START:
+                    if action == ControlAction.NONE:
+                        action = selectedTile.getAction(pos)
+                        if action == TileAction.NONE:
+                            selectedTile.updateSelectedTile(None)
+                        elif action == TileAction.DELETE:
+                            if issubclass(selectedTile.tile.__class__, TowerTile):
+                                empty = EmptyTile(selectedTile.tile.x, selectedTile.tile.y, selectedTile.tile.size)
+                                tileGrid.setTileAtPos((selectedTile.tile.x, selectedTile.tile.y), empty)
+                                selectedTile.updateSelectedTile(None)
+                    elif action == ControlAction.START:
                         tileGrid.startWave()
                     elif action == ControlAction.RESET:
                         tileGrid.regenerateGrid()
@@ -81,9 +90,11 @@ while True:
                         break
                 elif itemMenu.isInMenu(pos):
                     heldTile = itemMenu.getItem(pos)
+                    selectedTile.updateSelectedTile(heldtile)
                     break
                 else:
                     heldTile = Tile(0, 0, 0)
+                    selectedTile.updateSelectedTile(None)
                 pygame.mouse.set_visible(1)
                 holdingTile = False
                 tileGrid.showLines(False)
