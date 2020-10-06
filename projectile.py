@@ -5,12 +5,12 @@ import pygame
 class Projectile:
     speed = 5
 
-    def __init__(self, origin, color, target):
+    def __init__(self, origin, color, target, damage):
         self.x = origin[0]
         self.y = origin[1]
         self.color = color
         self.target = target
-        self.damage = 10
+        self.damage = damage
 
     def update(self):
         xDist = abs(self.target.x - self.x)

@@ -65,8 +65,8 @@ class Grid:
         self.projectileManager.update()
 
     def isInGrid(self, pos):
-        if self.x <= pos[0] <= self.x + self.tileSize * self.cols:
-            if self.y <= pos[1] <= self.y + self.tileSize * self.rows:
+        if self.x + self.borderWidth <= pos[0] <= self.x + self.tileSize * self.cols - self.borderWidth:
+            if self.y + self.borderWidth <= pos[1] <= self.y + self.tileSize * self.rows - self.borderWidth:
                 return True
         return False
 

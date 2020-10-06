@@ -2,6 +2,7 @@ from enum import Enum
 from GUI.control import Control
 from Tiles.towerTile import TowerTile
 import globals
+import pygame
 
 
 class TileAction(Enum):
@@ -16,15 +17,22 @@ class SelectedTileDisplay:
         self.x = startPos[0]
         self.y = startPos[1]
         self.tile = None
-        delete = Control((self.x + (globals.windowWidth - self.x) / 2 - 50, self.y + 125), (100, 25), "Delete", TileAction.DELETE)
+        self.midpoint = self.x + (globals.windowWidth - self.x) / 2
+        delete = Control(( self.midpoint - 50, self.y + 200), (100, 25), "Delete", TileAction.DELETE)
         self.actions.append(delete)
 
     def draw(self, screen):
-        if self.tile is not None:
-            self.tile.drawInBounds(self.x + (globals.windowWidth - self.x) / 2, self.y + 50, 100, screen)
         if issubclass(self.tile.__class__, TowerTile):
+            self.tile.drawInBounds(self.x + (globals.windowWidth - self.x) / 2, self.y + 50, 100, screen)
             for action in self.actions:
                 action.draw(screen)
+            font = pygame.font.Font(None, 30)
+            range = font.render("Range: " + str(self.tile.radius), 1, (150, 150, 150))
+            damage = font.render("Damage: " + str(self.tile.damage), 1, (150, 150, 150))
+            fire = font.render("Fire Rate: " + str(self.tile.fireRate), 1, (150, 150, 150))
+            screen.blit(range, (self.midpoint - range.get_rect().width / 2, self.y + 105))
+            screen.blit(damage, (self.midpoint - damage.get_rect().width / 2, self.y + 138))
+            screen.blit(fire, (self.midpoint - fire.get_rect().width / 2, self.y + 171))
 
     def updateSelectedTile(self, tile):
         if self.tile is not None:

@@ -14,6 +14,7 @@ class TowerTile(tile.Tile):
     radius = 100
     fireRate = 1
     lastShot = 0
+    damage = 10
 
     def __init__(self, x, y, size):
         tile.Tile.__init__(self, x, y, size)
@@ -47,6 +48,6 @@ class TowerTile(tile.Tile):
                 for enemy in tile.enemies:
                     if enemy.isInRange((self.x, self.y), self.radius):
                         self.lastShot = time.time()
-                        shot = Projectile((self.x + self.size / 2, self.y + self.size / 2), self.color, enemy)
+                        shot = Projectile((self.x + self.size / 2, self.y + self.size / 2), self.color, enemy, self.damage)
                         return shot
         return None

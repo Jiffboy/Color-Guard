@@ -90,7 +90,7 @@ while True:
                         break
                 elif itemMenu.isInMenu(pos):
                     heldTile = itemMenu.getItem(pos)
-                    selectedTile.updateSelectedTile(heldtile)
+                    selectedTile.updateSelectedTile(heldTile)
                     break
                 else:
                     heldTile = Tile(0, 0, 0)
@@ -101,6 +101,7 @@ while True:
 
     if holdingTile:
         pos = pygame.mouse.get_pos()
+        heldTile.selected = True
         if tileGrid.isPlaceableAtPos(pos):
             heldTile.isGreyed = False
         else:
