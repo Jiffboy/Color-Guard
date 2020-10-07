@@ -1,4 +1,5 @@
 from enum import Enum
+import math
 
 
 class Dir(Enum):
@@ -42,8 +43,13 @@ class Tile:
                 return True
         return False
 
-    def isInRadius(self):
-        return True
+    def isInRadius(self, tower, range):
+        closestX = max(self.x, min(self.x + self.size, tower[0]))
+        closestY = max(self.y, min(self.y + self.size, tower[1]))
+        distX = tower[0] - closestX
+        distY = tower[1] - closestY
+        distance = math.sqrt(distX ** 2 + distY ** 2)
+        return distance <= range
 
     def enterEnemy(self, enemy):
         self.enemies.append(enemy)

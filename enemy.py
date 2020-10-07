@@ -11,7 +11,7 @@ class Enemy:
         self.direction = Dir.SOUTH
         self.speed = speed
         self.pastHalf = False
-        self.health = 100
+        self.health = 1000
         self.damageTaken = 0
         self.color = (255, 255, 255)
         startTile.enterEnemy(self)
@@ -41,7 +41,15 @@ class Enemy:
 
 
     def isInRange(self, tower, range):
-        return True
+        closestX = max(self.x - self.currTile.size/4, min(self.x + self.currTile.size/4, tower[0]))
+        closestY = max(self.y - self.currTile.size/4, min(self.y + self.currTile.size/4, tower[1]))
+        distX = tower[0] - closestX
+        distY = tower[1] - closestY
+        distance = math.sqrt(distX ** 2 + distY ** 2)
+        return distance <= range
+
+
+
 
     def isHit(self, point):
         lowerX = self.x - self.currTile.size / 4

@@ -38,7 +38,7 @@ class TowerTile(tile.Tile):
         self.tilesInRange.clear()
         for i in range(len(grid)):
             for j in range(len(grid[0])):
-                if grid[i][j].isInRadius():
+                if grid[i][j].isInRadius((self.x + self.size, self.y + self.size), self.radius):
                     if grid[i][j].isRoad:
                         self.tilesInRange.append(grid[i][j])
 
@@ -46,7 +46,7 @@ class TowerTile(tile.Tile):
         if time.time() - self.lastShot >= self.fireRate:
             for tile in self.tilesInRange:
                 for enemy in tile.enemies:
-                    if enemy.isInRange((self.x, self.y), self.radius):
+                    if enemy.isInRange((self.x + self.size/2, self.y + self.size/2), self.radius):
                         self.lastShot = time.time()
                         shot = Projectile((self.x + self.size / 2, self.y + self.size / 2), self.color, enemy, self.damage)
                         return shot
