@@ -17,7 +17,7 @@ class Enemy:
         startTile.enterEnemy(self)
 
     def draw(self, screen):
-        length = (self.currTile.size / 2) * (1 - self.damageTaken / self.health)
+        length = math.floor(((self.currTile.size / 2) * (self.damageTaken / self.health)) / 2) * 2
         red = math.floor(255 * ((self.health - self.damageTaken) / self.health) + self.color[0] * (self.damageTaken / self.health))
         green = math.floor(255 * ((self.health - self.damageTaken) / self.health) + self.color[1] * (self.damageTaken / self.health))
         blue = math.floor(255 * ((self.health - self.damageTaken) / self.health) + self.color[2] * (self.damageTaken / self.health))
@@ -36,8 +36,8 @@ class Enemy:
             blue = 255
 
         pygame.draw.rect(screen, (150, 150, 150), (self.x - self.currTile.size / 4 - 1, self.y - self.currTile.size / 4- 1, self.currTile.size / 2 + 2, self.currTile.size / 2 + 2))
-        pygame.draw.rect(screen, (red, green, blue), (self.x - self.currTile.size/4, self.y - self.currTile.size/4, self.currTile.size / 2, self.currTile.size / 2))
-        pygame.draw.rect(screen, (255,255,255), (self.x - (length / 2), self.y - 2, length, 4))
+        pygame.draw.rect(screen, (255,255,255), (self.x - self.currTile.size/4, self.y - self.currTile.size/4, self.currTile.size / 2, self.currTile.size / 2))
+        pygame.draw.rect(screen, (red, green, blue), (self.x - (length / 2), self.y - (length / 2), length, length))
 
 
     def isInRange(self, tower, range):

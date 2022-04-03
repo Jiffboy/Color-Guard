@@ -6,6 +6,8 @@ class Projectile:
     speed = 5
 
     def __init__(self, origin, color, target, damage):
+        self.origx = origin[0]
+        self.origy = origin[1]
         self.x = origin[0]
         self.y = origin[1]
         self.color = color
@@ -39,4 +41,4 @@ class Projectile:
         return False
 
     def draw(self, screen):
-        pygame.draw.rect(screen, self.color, (self.x + 4, self.y + 4, 8, 8))
+        pygame.draw.rect(screen, self.color, (self.x - 4, self.y - 4, 8, 8))
